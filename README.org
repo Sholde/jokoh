@@ -1,0 +1,89 @@
+#+TITLE: JOKOH: A simple generic C wrapper for low level timers
+#+AUTHOR: Sholde
+#+DATE: January 2023
+
+This repository aims to provide a C interface for low-level timers with almost
+zero overhead.
+
+Moreover, it allows the user to code a small wrapper to 1 interfaces offered by
+**jokoh**, and then only have to change this line in the code to change the
+counter used in the whole code. See below:
+
+#+begin_src C
+#include <stdint.h>
+#include <jokoh.h>
+
+uint64_t get_time(void)
+{
+  return get_time_monotonic_raw();
+}
+#+end_src
+
+* Insallation
+
+#+begin_src sh
+$ git clone https://github.com/Sholde/jokoh.git
+$ make
+$ sudo make install
+#+end_src
+
+** Help
+
+#+begin_src sh
+$ make help
+###################################################################
+This is the Makefile for the execution of libjokoh.so
+make help shows this extra information
+
+Usage: make target VAR=
+target is one of:
+  help                      : show this help message
+  all                       : build the project
+  clean                     : removes everything that can be rebuilt
+  prepare                   : create empty directories for objects and binaries
+  install                   : install the shared library in INSTALL_PREFIX
+  uninstall                 : uninstall the shared library in INSTALL_PREFIX
+VAR can be one of:
+  VERBOSE                   : by default it is set to '@' and disables verbosity, set it to '' to enable verbosity
+  INSTALL_PREFIX            : by default it is defined as '/usr/local', it specifies the directory where the shared library will be installed
+#+end_src
+
+* List of supported functions
+
+#+begin_src C
+/* clock_gettime API in nanoseconds */
+uint64_t get_time_realtime(void);
+uint64_t get_time_monotonic(void);
+uint64_t get_time_monotonic_raw(void);
+uint64_t get_time_process(void);
+uint64_t get_time_thread(void);
+
+/* clock_gettime API in seconds */
+uint64_t get_time_realtime_sec(void);
+uint64_t get_time_monotonic_sec(void);
+uint64_t get_time_monotonic_raw_sec(void);
+uint64_t get_time_process_sec(void);
+uint64_t get_time_thread_sec(void);
+
+/* x86/amd64 counter API */
+#if defined(__x86_64__)
+uint64_t get_time_x86(void);
+uint64_t get_time_x86_serialized(void);
+uint64_t get_time_amd64(void);
+uint64_t get_time_amd64_serialized(void);
+#elif defined(__i386__)
+uint32_t get_time_x86(void);
+uint32_t get_time_x86_serialized(void);
+uint32_t get_time_amd64(void);
+uint32_t get_time_amd64_serialized(void);
+#endif
+
+/* aarch64 counter API */
+#if defined(__aarch64__)
+uint64_t get_time_aarch64_physical(void);
+uint64_t get_time_aarch64_physical_serialized(void);
+uint64_t get_time_aarch64_virtual(void);
+uint64_t get_time_aarch64_virtual_serialized(void);
+uint64_t get_time_aarch64_performance(void);
+#endif
+#+end_src
