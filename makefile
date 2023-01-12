@@ -45,15 +45,18 @@ example:
 # Install/Uninstall: install/uninstall the library
 ################################################################################
 .PHONY: install
-install: $(BIN)/$(TARGET)
+install:
 	@ echo "-- Installing the shared library in $(INSTALL_PREFIX)"
 	$(VERBOSE) mkdir -p $(INSTALL_PREFIX)/lib
+	$(VERBOSE) mkdir -p $(INSTALL_PREFIX)/include
 	$(VERBOSE) cp -iv ./$(BIN)/$(TARGET) $(INSTALL_PREFIX)/lib
+	$(VERBOSE) cp -iv ./$(SRC)/jokoh.h $(INSTALL_PREFIX)/include
 
 .PHONY: uninstall
 uninstall:
 	@ echo "-- Uninstalling the shared library in $(INSTALL_PREFIX)"
 	$(VERBOSE) rm -iv $(INSTALL_PREFIX)/lib/$(TARGET)
+	$(VERBOSE) rm -iv $(INSTALL_PREFIX)/include/jokoh.h
 
 ################################################################################
 # Clean: removes everything that can be rebuilt
